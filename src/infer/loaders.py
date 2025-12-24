@@ -1,0 +1,408 @@
+"""
+Loading functions for inference.
+
+This module provides functions to load models, data, and parameters
+for single image inference and comparison. It imports and reuses functions
+from run_balanced_plugin_gating.py to avoid code duplication.
+"""
+
+from pathlib import Path
+import json
+import numpy as np
+import torch
+import torchvision
+from typing import Dict, List, Tuple, Optional
+
+from src.models.experts import Expert
+from src.data.datasets import get_eval_augmentations
+
+# Import functions from run_balanced_plugin_gating.py
+# We need to set CFG before calling these functions
+import run_balanced_plugin_gating as plugin_gating
+
+# Configuration
+DATASET = "cifar100_lt_if100"
+NUM_CLASSES = 100
+NUM_GROUPS = 2
+TAIL_THRESHOLD = 20
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+# Paths
+SPLITS_DIR = Path(f"./data/{DATASET}_splits_fixed")
+CHECKPOINTS_DIR = Path(f"./checkpoints")
+RESULTS_DIR = Path(f"./results/ltr_plugin/{DATASET}")
+
+EXPERT_NAMES = ["ce_baseline", "logitadjust_baseline", "balsoftmax_baseline"]
+EXPERT_DISPLAY_NAMES = ["CE", "LogitAdjust", "BalancedSoftmax"]
+
+# Export paths for use in other modules
+# Export all constants and functions
+__all__ = [
+    'DATASET', 'NUM_CLASSES', 'NUM_GROUPS', 'TAIL_THRESHOLD', 'DEVICE',
+    'SPLITS_DIR', 'CHECKPOINTS_DIR', 'RESULTS_DIR',
+    'EXPERT_NAMES', 'EXPERT_DISPLAY_NAMES',
+    'load_class_to_group', 'load_test_sample_with_image',
+    'load_image_from_infer_samples',
+    'load_ce_expert', 'load_all_experts', 'load_gating_network',
+    'load_plugin_params',
+]
+
+
+def _setup_cfg():
+    """Setup CFG in plugin_gating module from loaders constants."""
+    cfg = plugin_gating.setup_config(DATASET)
+    plugin_gating.CFG = cfg
+
+
+def load_class_to_group() -> torch.Tensor:
+    """Build class-to-group mapping: tail classes (train count <= 20) → group 1.
+    
+    Imports from run_balanced_plugin_gating.py to avoid duplication.
+    """
+    _setup_cfg()
+    # Call build_class_to_group from plugin_gating
+    result = plugin_gating.build_class_to_group()
+    # Ensure tensor is on correct device
+    if result.device != DEVICE:
+        result = result.to(DEVICE)
+    # Update print message to match expected format
+    num_head = (result.cpu().numpy() == 0).sum()
+    num_tail = (result.cpu().numpy() == 1).sum()
+    # print(f"📊 Groups: {num_head} head classes, {num_tail} tail classes")
+    return result
+
+
+def load_image_from_infer_samples(
+    image_path: Optional[Path] = None,
+    class_idx: Optional[int] = None,
+    group: Optional[str] = None
+) -> Tuple[torch.Tensor, int, np.ndarray, str]:
+    """
+    Load image from infer_samples folder.
+    
+    Args:
+        image_path: Direct path to image file (e.g., Path("./infer_samples/Cifar100/tail/tail_70_rose.png"))
+        class_idx: Class index to load (will search in Cifar100/head or Cifar100/tail)
+        group: "head" or "tail" (required if class_idx is provided)
+    
+    Returns:
+        Tuple of (image_tensor, label, image_array, class_name)
+    """
+    from PIL import Image
+    
+    infer_samples_dir = Path("./infer_samples")
+    
+    # Case 1: Direct image path provided
+    if image_path is not None:
+        if isinstance(image_path, str):
+            image_path = Path(image_path)
+        
+        if not image_path.exists():
+            raise FileNotFoundError(f"Image not found: {image_path}")
+        
+        # Load image
+        image = Image.open(image_path).convert('RGB')
+        image_array = np.array(image)  # [H, W, 3]
+        
+        # Parse filename to extract class info
+        # Format: {group}_{class_idx}_{class_name}.png
+        filename = image_path.stem
+        parts = filename.split('_')
+        
+        if len(parts) >= 3:
+            group_name = parts[0]
+            class_idx_parsed = int(parts[1])
+            class_name = '_'.join(parts[2:])  # Handle class names with underscores
+        else:
+            # Fallback: try to extract from path
+            if 'head' in str(image_path):
+                group_name = "head"
+            elif 'tail' in str(image_path):
+                group_name = "tail"
+            else:
+                group_name = "unknown"
+            
+            # Try to extract class_idx from filename
+            class_idx_parsed = None
+            for part in parts:
+                if part.isdigit():
+                    class_idx_parsed = int(part)
+                    break
+            
+            class_name = image_path.stem
+        
+        label = class_idx_parsed if class_idx_parsed is not None else -1
+        
+    # Case 2: Search by class_idx and group
+    elif class_idx is not None and group is not None:
+        cifar100_dir = infer_samples_dir / "Cifar100" / group
+        if not cifar100_dir.exists():
+            raise FileNotFoundError(f"Directory not found: {cifar100_dir}")
+        
+        # Search for file matching pattern: {group}_{class_idx}_*.png
+        pattern = f"{group}_{class_idx}_*.png"
+        matching_files = list(cifar100_dir.glob(pattern))
+        
+        if len(matching_files) == 0:
+            raise FileNotFoundError(f"No image found for class {class_idx} in {group} group")
+        
+        image_path = matching_files[0]
+        image = Image.open(image_path).convert('RGB')
+        image_array = np.array(image)
+        
+        # Parse class name from filename
+        filename = image_path.stem
+        parts = filename.split('_')
+        class_name = '_'.join(parts[2:]) if len(parts) >= 3 else filename
+        label = class_idx
+    
+    else:
+        raise ValueError("Must provide either image_path or (class_idx, group)")
+    
+    # Resize to 32x32 if needed (for CIFAR-100 compatibility)
+    if image_array.shape[:2] != (32, 32):
+        image = Image.fromarray(image_array).resize((32, 32), Image.Resampling.LANCZOS)
+        image_array = np.array(image)
+    
+    # Apply transforms for model input
+    transform = get_eval_augmentations()
+    image_tensor = transform(image).unsqueeze(0).to(DEVICE)  # [1, 3, 32, 32]
+    
+    print(f"\n📷 Loaded image from: {image_path}")
+    print(f"   Class: {label} ({class_name})")
+    print(f"   Image shape: {image_array.shape}")
+    
+    return image_tensor, label, image_array, class_name
+
+
+def load_test_sample_with_image(class_idx: Optional[int] = None) -> Tuple[torch.Tensor, int, np.ndarray, str]:
+    """Load a single test sample from CIFAR-100 dataset."""
+    dataset = torchvision.datasets.CIFAR100(root="./data", train=False, download=False)
+    
+    indices_file = SPLITS_DIR / "test_indices.json"
+    with open(indices_file, "r", encoding="utf-8") as f:
+        test_indices = json.load(f)
+    
+    class_to_group = load_class_to_group().cpu().numpy()
+    
+    if class_idx is None:
+        tail_classes = np.where(class_to_group == 1)[0]
+        class_idx = np.random.choice(tail_classes)
+        print(f"🎲 Randomly selected tail class: {class_idx}")
+    else:
+        print(f"🎯 Selected class: {class_idx}")
+    
+    # Find indices of samples from this class in test set
+    class_samples = []
+    for idx in test_indices:
+        if dataset.targets[idx] == class_idx:
+            class_samples.append(idx)
+    
+    if len(class_samples) == 0:
+        raise ValueError(f"No test samples found for class {class_idx}")
+    
+    selected_idx = np.random.choice(class_samples)
+    image, label = dataset[selected_idx]
+    
+    class_name = dataset.classes[class_idx]
+    
+    # Convert PIL to numpy for display
+    image_array = np.array(image)  # [32, 32, 3]
+    
+    # Apply transforms for model input
+    transform = get_eval_augmentations()
+    image_tensor = transform(image).unsqueeze(0).to(DEVICE)  # [1, 3, 32, 32]
+    
+    is_tail = class_to_group[class_idx] == 1
+    group_str = "tail" if is_tail else "head"
+    
+    print(f"\n📷 Selected sample:")
+    print(f"   Class: {class_idx} ({class_name}) - {group_str}")
+    print(f"   True label: {label}")
+    print(f"   Image shape: {image_array.shape}")
+    
+    return image_tensor, label, image_array, class_name
+
+
+def load_ce_expert() -> Expert:
+    """Load CE expert model."""
+    expert = Expert(num_classes=NUM_CLASSES, backbone_name="cifar_resnet32")
+    checkpoint_path = CHECKPOINTS_DIR / "experts" / DATASET / "final_calibrated_ce_baseline.pth"
+    
+    checkpoint = torch.load(checkpoint_path, map_location=DEVICE, weights_only=False)
+    
+    # Expert checkpoints are saved directly as state_dict
+    state_dict = checkpoint
+    if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
+        state_dict = checkpoint["model_state_dict"]
+    
+    # Handle temperature separately to avoid shape mismatch
+    temp_value = None
+    if "temperature" in state_dict:
+        temp_tensor = state_dict["temperature"]
+        # Handle both scalar and tensor cases
+        if temp_tensor.dim() == 0:  # scalar
+            temp_value = temp_tensor.item()
+        else:  # tensor with shape [1] or similar
+            temp_value = temp_tensor.item() if temp_tensor.numel() == 1 else temp_tensor[0].item()
+        # Remove temperature from state_dict to avoid shape mismatch
+        state_dict = {k: v for k, v in state_dict.items() if k != "temperature"}
+    
+    # Load state_dict (without temperature)
+    expert.load_state_dict(state_dict, strict=False)
+    
+    # Set temperature separately if available
+    if temp_value is not None:
+        expert.set_temperature(temp_value)
+    
+    expert.eval()
+    expert = expert.to(DEVICE)
+    
+    print(f"✅ Loaded CE expert from {checkpoint_path}")
+    return expert
+
+
+def load_all_experts() -> List[Expert]:
+    """Load all 3 expert models."""
+    experts = []
+    expert_files = ["ce_baseline", "logitadjust_baseline", "balsoftmax_baseline"]
+    
+    for expert_file in expert_files:
+        expert = Expert(num_classes=NUM_CLASSES, backbone_name="cifar_resnet32")
+        checkpoint_path = CHECKPOINTS_DIR / "experts" / DATASET / f"final_calibrated_{expert_file}.pth"
+        
+        checkpoint = torch.load(checkpoint_path, map_location=DEVICE, weights_only=False)
+        
+        # Expert checkpoints are saved directly as state_dict
+        state_dict = checkpoint
+        if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
+            state_dict = checkpoint["model_state_dict"]
+        
+        # Handle temperature separately to avoid shape mismatch
+        temp_value = None
+        if "temperature" in state_dict:
+            temp_tensor = state_dict["temperature"]
+            # Handle both scalar and tensor cases
+            if temp_tensor.dim() == 0:  # scalar
+                temp_value = temp_tensor.item()
+            else:  # tensor with shape [1] or similar
+                temp_value = temp_tensor.item() if temp_tensor.numel() == 1 else temp_tensor[0].item()
+            # Remove temperature from state_dict to avoid shape mismatch
+            state_dict = {k: v for k, v in state_dict.items() if k != "temperature"}
+        
+        # Load state_dict (without temperature)
+        expert.load_state_dict(state_dict, strict=False)
+        
+        # Set temperature separately if available
+        if temp_value is not None:
+            expert.set_temperature(temp_value)
+        
+        expert.eval()
+        expert = expert.to(DEVICE)
+        
+        experts.append(expert)
+        print(f"✅ Loaded {expert_file} expert")
+    
+    return experts
+
+
+def load_gating_network():
+    """Load trained gating network.
+    
+    Imports from run_balanced_plugin_gating.py to avoid duplication.
+    """
+    _setup_cfg()
+    # Call load_gating_network from plugin_gating with correct device
+    result = plugin_gating.load_gating_network(device=DEVICE)
+    # Ensure gating network is on correct device
+    result = result.to(DEVICE)
+    return result
+
+
+def load_plugin_params(method: str = "moe", mode: str = "worst", rejection_rate: Optional[float] = None) -> Tuple[np.ndarray, np.ndarray, float]:
+    """
+    Load optimized plugin parameters from results JSON files.
+    
+    Args:
+        method: Either "moe" (Mixture of Experts with gating) or "ce_only" (CE expert only)
+        mode: Either "balanced" or "worst"
+        rejection_rate: Target rejection rate (e.g., 0.3). If None, finds closest to 0.3.
+    
+    Returns:
+        Tuple of (alpha, mu, cost) as numpy arrays and float
+    
+    Raises:
+        FileNotFoundError: If the results file does not exist
+        ValueError: If the results file is empty or invalid
+    """
+    # Determine file path based on method and mode
+    if method == "moe":
+        if mode == "worst":
+            results_path = RESULTS_DIR / "ltr_plugin_gating_worst.json"
+            results_key = "results_per_point"
+            metrics_key = "test_metrics"
+        elif mode == "balanced":
+            results_path = RESULTS_DIR / "ltr_plugin_gating_balanced.json"
+            results_key = "results_per_cost"
+            metrics_key = "val_metrics"
+        else:
+            raise ValueError(f"Invalid mode '{mode}' for method 'moe'. Must be 'balanced' or 'worst'")
+    elif method == "ce_only":
+        if mode == "balanced":
+            results_path = RESULTS_DIR / "ltr_plugin_ce_only_balanced.json"
+            results_key = "results_per_cost"
+            metrics_key = "val_metrics"
+        elif mode == "worst":
+            results_path = RESULTS_DIR / "ltr_plugin_ce_only_worst.json"
+            results_key = "results_per_point"
+            metrics_key = "test_metrics"
+        else:
+            raise ValueError(f"Invalid mode '{mode}' for method 'ce_only'. Must be 'balanced' or 'worst'")
+    else:
+        raise ValueError(f"Invalid method '{method}'. Must be 'moe' or 'ce_only'")
+    
+    if not results_path.exists():
+        raise FileNotFoundError(f"Plugin results not found at {results_path}")
+    
+    with open(results_path, "r", encoding="utf-8") as f:
+        results = json.load(f)
+    
+    results_list = results.get(results_key, [])
+    
+    if len(results_list) == 0:
+        raise ValueError(f"No results found in {results_path} under key '{results_key}'")
+    
+    # Find config with target rejection rate
+    target_rejection_rate = rejection_rate if rejection_rate is not None else 0.3
+    best_result = None
+    
+    # First, try to find exact match with target_rejection field
+    for r in results_list:
+        if "target_rejection" in r:
+            if abs(r["target_rejection"] - target_rejection_rate) < 1e-6:
+                best_result = r
+                break
+    
+    if best_result is None:
+        best_result = results_list[0]
+    
+    alpha = np.array(best_result["alpha"])
+    mu = np.array(best_result["mu"])
+    
+    # Extract cost based on method and mode
+    if method == "moe" and mode == "worst":
+        cost = best_result.get("cost_test", 0.0)
+        beta = np.array(best_result.get("beta", [1.0, 1.0])) if "beta" in best_result else None
+    elif method == "ce_only" and mode == "balanced":
+        cost = best_result.get("cost_val", best_result.get("cost_test", 0.0))
+        beta = None
+    else:
+        cost = best_result.get("cost_test", best_result.get("cost_val", 0.0))
+        beta = np.array(best_result.get("beta", [1.0, 1.0])) if "beta" in best_result else None
+    
+    print(f"✅ Loaded plugin params ({method}, {mode}) from {results_path}")
+    print(f"   α = {alpha}, μ = {mu}")
+    if beta is not None:
+        print(f"   β = {beta}")
+    
+    return alpha, mu, cost

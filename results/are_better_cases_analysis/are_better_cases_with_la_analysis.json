@@ -1,0 +1,726 @@
+{
+  "balanced": [
+    {
+      "rejection_rate": 0.0009999871253967285,
+      "mode": "balanced",
+      "total_samples": 8000,
+      "cases_are_better": 3,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 1,
+        "ce_false_accept_are_true_reject": 2
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 0,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 0
+        },
+        "tail": {
+          "total": 3,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 1,
+          "ce_false_accept_are_true_reject": 2
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.10100001096725464,
+      "mode": "balanced",
+      "total_samples": 8000,
+      "cases_are_better": 3,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 1,
+        "ce_false_accept_are_true_reject": 2
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 0,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 0
+        },
+        "tail": {
+          "total": 3,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 1,
+          "ce_false_accept_are_true_reject": 2
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.19999998807907104,
+      "mode": "balanced",
+      "total_samples": 8000,
+      "cases_are_better": 1095,
+      "cases_with_logitadjust": 10,
+      "cases_are_better_with_logitadjust": 10,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 220,
+        "ce_false_accept_are_true_reject": 875
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 2,
+        "ce_false_accept_are_true_reject": 8
+      },
+      "by_group": {
+        "head": {
+          "total": 734,
+          "with_la": 6,
+          "ce_false_reject_are_true_accept": 218,
+          "ce_false_accept_are_true_reject": 516
+        },
+        "tail": {
+          "total": 361,
+          "with_la": 4,
+          "ce_false_reject_are_true_accept": 2,
+          "ce_false_accept_are_true_reject": 359
+        }
+      },
+      "expert_combinations": {
+        "ce_baseline + logitadjust_baseline": 10
+      },
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.30000001192092896,
+      "mode": "balanced",
+      "total_samples": 8000,
+      "cases_are_better": 1239,
+      "cases_with_logitadjust": 31,
+      "cases_are_better_with_logitadjust": 31,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 259,
+        "ce_false_accept_are_true_reject": 980
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 7,
+        "ce_false_accept_are_true_reject": 24
+      },
+      "by_group": {
+        "head": {
+          "total": 803,
+          "with_la": 22,
+          "ce_false_reject_are_true_accept": 258,
+          "ce_false_accept_are_true_reject": 545
+        },
+        "tail": {
+          "total": 436,
+          "with_la": 9,
+          "ce_false_reject_are_true_accept": 1,
+          "ce_false_accept_are_true_reject": 435
+        }
+      },
+      "expert_combinations": {
+        "ce_baseline + logitadjust_baseline": 31
+      },
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.3999999761581421,
+      "mode": "balanced",
+      "total_samples": 8000,
+      "cases_are_better": 1218,
+      "cases_with_logitadjust": 47,
+      "cases_are_better_with_logitadjust": 47,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 346,
+        "ce_false_accept_are_true_reject": 872
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 25,
+        "ce_false_accept_are_true_reject": 22
+      },
+      "by_group": {
+        "head": {
+          "total": 810,
+          "with_la": 39,
+          "ce_false_reject_are_true_accept": 345,
+          "ce_false_accept_are_true_reject": 465
+        },
+        "tail": {
+          "total": 408,
+          "with_la": 8,
+          "ce_false_reject_are_true_accept": 1,
+          "ce_false_accept_are_true_reject": 407
+        }
+      },
+      "expert_combinations": {
+        "ce_baseline + logitadjust_baseline": 47
+      },
+      "saved_image_indices": [
+        6368,
+        7601,
+        417,
+        4426,
+        317,
+        8308,
+        3175,
+        5319,
+        8854,
+        2216,
+        9841,
+        1866,
+        2080,
+        315,
+        1147,
+        2409,
+        5017,
+        39,
+        249,
+        5741,
+        6216,
+        7855,
+        2610,
+        4615,
+        990,
+        8061,
+        2061,
+        8939,
+        4137,
+        7369,
+        8879,
+        6195,
+        4949,
+        4197,
+        9830,
+        1841,
+        9020,
+        8734,
+        6810,
+        2076,
+        5856,
+        2706,
+        1580,
+        9270,
+        3661,
+        2326,
+        4526
+      ]
+    },
+    {
+      "rejection_rate": 0.49900001287460327,
+      "mode": "balanced",
+      "total_samples": 8000,
+      "cases_are_better": 3,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 1,
+        "ce_false_accept_are_true_reject": 2
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 0,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 0
+        },
+        "tail": {
+          "total": 3,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 1,
+          "ce_false_accept_are_true_reject": 2
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.5990000069141388,
+      "mode": "balanced",
+      "total_samples": 8000,
+      "cases_are_better": 3,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 1,
+        "ce_false_accept_are_true_reject": 2
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 0,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 0
+        },
+        "tail": {
+          "total": 3,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 1,
+          "ce_false_accept_are_true_reject": 2
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.6990000009536743,
+      "mode": "balanced",
+      "total_samples": 8000,
+      "cases_are_better": 3,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 1,
+        "ce_false_accept_are_true_reject": 2
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 0,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 0
+        },
+        "tail": {
+          "total": 3,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 1,
+          "ce_false_accept_are_true_reject": 2
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.7989999949932098,
+      "mode": "balanced",
+      "total_samples": 8000,
+      "cases_are_better": 3,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 1,
+        "ce_false_accept_are_true_reject": 2
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 0,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 0
+        },
+        "tail": {
+          "total": 3,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 1,
+          "ce_false_accept_are_true_reject": 2
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    }
+  ],
+  "worst": [
+    {
+      "rejection_rate": 0.0,
+      "mode": "worst",
+      "total_samples": 8000,
+      "cases_are_better": 719,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 5,
+        "ce_false_accept_are_true_reject": 714
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 309,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 309
+        },
+        "tail": {
+          "total": 410,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 5,
+          "ce_false_accept_are_true_reject": 405
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.10000002384185791,
+      "mode": "worst",
+      "total_samples": 8000,
+      "cases_are_better": 1040,
+      "cases_with_logitadjust": 56,
+      "cases_are_better_with_logitadjust": 56,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 87,
+        "ce_false_accept_are_true_reject": 953
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 4,
+        "ce_false_accept_are_true_reject": 52
+      },
+      "by_group": {
+        "head": {
+          "total": 646,
+          "with_la": 38,
+          "ce_false_reject_are_true_accept": 70,
+          "ce_false_accept_are_true_reject": 576
+        },
+        "tail": {
+          "total": 394,
+          "with_la": 18,
+          "ce_false_reject_are_true_accept": 17,
+          "ce_false_accept_are_true_reject": 377
+        }
+      },
+      "expert_combinations": {
+        "ce_baseline + logitadjust_baseline": 56
+      },
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.19999998807907104,
+      "mode": "worst",
+      "total_samples": 8000,
+      "cases_are_better": 693,
+      "cases_with_logitadjust": 59,
+      "cases_are_better_with_logitadjust": 59,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 144,
+        "ce_false_accept_are_true_reject": 549
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 16,
+        "ce_false_accept_are_true_reject": 43
+      },
+      "by_group": {
+        "head": {
+          "total": 466,
+          "with_la": 48,
+          "ce_false_reject_are_true_accept": 135,
+          "ce_false_accept_are_true_reject": 331
+        },
+        "tail": {
+          "total": 227,
+          "with_la": 11,
+          "ce_false_reject_are_true_accept": 9,
+          "ce_false_accept_are_true_reject": 218
+        }
+      },
+      "expert_combinations": {
+        "ce_baseline + logitadjust_baseline": 59
+      },
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.30000001192092896,
+      "mode": "worst",
+      "total_samples": 8000,
+      "cases_are_better": 618,
+      "cases_with_logitadjust": 60,
+      "cases_are_better_with_logitadjust": 60,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 162,
+        "ce_false_accept_are_true_reject": 456
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 20,
+        "ce_false_accept_are_true_reject": 40
+      },
+      "by_group": {
+        "head": {
+          "total": 431,
+          "with_la": 50,
+          "ce_false_reject_are_true_accept": 157,
+          "ce_false_accept_are_true_reject": 274
+        },
+        "tail": {
+          "total": 187,
+          "with_la": 10,
+          "ce_false_reject_are_true_accept": 5,
+          "ce_false_accept_are_true_reject": 182
+        }
+      },
+      "expert_combinations": {
+        "ce_baseline + logitadjust_baseline": 60
+      },
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.3999999761581421,
+      "mode": "worst",
+      "total_samples": 8000,
+      "cases_are_better": 547,
+      "cases_with_logitadjust": 49,
+      "cases_are_better_with_logitadjust": 49,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 200,
+        "ce_false_accept_are_true_reject": 347
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 20,
+        "ce_false_accept_are_true_reject": 29
+      },
+      "by_group": {
+        "head": {
+          "total": 401,
+          "with_la": 44,
+          "ce_false_reject_are_true_accept": 197,
+          "ce_false_accept_are_true_reject": 204
+        },
+        "tail": {
+          "total": 146,
+          "with_la": 5,
+          "ce_false_reject_are_true_accept": 3,
+          "ce_false_accept_are_true_reject": 143
+        }
+      },
+      "expert_combinations": {
+        "ce_baseline + logitadjust_baseline": 49
+      },
+      "saved_image_indices": [
+        2338,
+        9424,
+        737,
+        2417,
+        3707,
+        3868,
+        3985,
+        5762,
+        8486,
+        7867,
+        9472,
+        8859,
+        4187,
+        2463,
+        1244,
+        7881,
+        315,
+        3760,
+        5017,
+        993,
+        3298,
+        5741,
+        6061,
+        2610,
+        9763,
+        8946,
+        8979,
+        3606,
+        1109,
+        7632,
+        4572,
+        2192,
+        1071,
+        9244,
+        2255,
+        2061,
+        4588,
+        9035,
+        9830,
+        1584,
+        4501,
+        9020,
+        5751,
+        6810,
+        2076,
+        8622,
+        3215,
+        1663,
+        9270
+      ]
+    },
+    {
+      "rejection_rate": 0.499875009059906,
+      "mode": "worst",
+      "total_samples": 8000,
+      "cases_are_better": 719,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 5,
+        "ce_false_accept_are_true_reject": 714
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 309,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 309
+        },
+        "tail": {
+          "total": 410,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 5,
+          "ce_false_accept_are_true_reject": 405
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.5998750030994415,
+      "mode": "worst",
+      "total_samples": 8000,
+      "cases_are_better": 719,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 5,
+        "ce_false_accept_are_true_reject": 714
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 309,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 309
+        },
+        "tail": {
+          "total": 410,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 5,
+          "ce_false_accept_are_true_reject": 405
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.699874997138977,
+      "mode": "worst",
+      "total_samples": 8000,
+      "cases_are_better": 719,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 5,
+        "ce_false_accept_are_true_reject": 714
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 309,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 309
+        },
+        "tail": {
+          "total": 410,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 5,
+          "ce_false_accept_are_true_reject": 405
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.7998750060796738,
+      "mode": "worst",
+      "total_samples": 8000,
+      "cases_are_better": 719,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 5,
+        "ce_false_accept_are_true_reject": 714
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 309,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 309
+        },
+        "tail": {
+          "total": 410,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 5,
+          "ce_false_accept_are_true_reject": 405
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    },
+    {
+      "rejection_rate": 0.8998750001192093,
+      "mode": "worst",
+      "total_samples": 8000,
+      "cases_are_better": 719,
+      "cases_with_logitadjust": 0,
+      "cases_are_better_with_logitadjust": 0,
+      "case_types": {
+        "ce_false_reject_are_true_accept": 5,
+        "ce_false_accept_are_true_reject": 714
+      },
+      "case_types_with_la": {
+        "ce_false_reject_are_true_accept": 0,
+        "ce_false_accept_are_true_reject": 0
+      },
+      "by_group": {
+        "head": {
+          "total": 309,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 0,
+          "ce_false_accept_are_true_reject": 309
+        },
+        "tail": {
+          "total": 410,
+          "with_la": 0,
+          "ce_false_reject_are_true_accept": 5,
+          "ce_false_accept_are_true_reject": 405
+        }
+      },
+      "expert_combinations": {},
+      "saved_image_indices": []
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "total_samples": 8000,
+  "top_k": 2,
+  "expert_names": [
+    "CE",
+    "LogitAdjust",
+    "BalancedSoftmax"
+  ],
+  "expert_indices": {
+    "CE": 0,
+    "LogitAdjust": 1,
+    "BalancedSoftmax": 2
+  },
+  "expert_usage_counts": {
+    "CE": 7201,
+    "LogitAdjust": 4639,
+    "BalancedSoftmax": 4160
+  },
+  "expert_usage_percentages": {
+    "CE": 90.01249999999999,
+    "LogitAdjust": 57.987500000000004,
+    "BalancedSoftmax": 52.0
+  },
+  "expert_combinations": {
+    "CE + LogitAdjust": {
+      "count": 3840,
+      "percentage": 48.0
+    },
+    "LogitAdjust + BalancedSoftmax": {
+      "count": 799,
+      "percentage": 9.9875
+    },
+    "CE + BalancedSoftmax": {
+      "count": 3361,
+      "percentage": 42.0125
+    }
+  },
+  "group_statistics": {
+    "head": {
+      "total_samples": 5520,
+      "expert_usage_counts": {
+        "CE": 4750,
+        "LogitAdjust": 3241,
+        "BalancedSoftmax": 3049
+      },
+      "expert_usage_percentages": {
+        "CE": 86.05072463768117,
+        "LogitAdjust": 58.71376811594203,
+        "BalancedSoftmax": 55.23550724637681
+      },
+      "expert_combinations": {
+        "CE + LogitAdjust": {
+          "count": 2471,
+          "percentage": 44.76449275362319
+        },
+        "LogitAdjust + BalancedSoftmax": {
+          "count": 770,
+          "percentage": 13.949275362318842
+        },
+        "CE + BalancedSoftmax": {
+          "count": 2279,
+          "percentage": 41.28623188405797
+        }
+      }
+    },
+    "tail": {
+      "total_samples": 2480,
+      "expert_usage_counts": {
+        "CE": 2451,
+        "LogitAdjust": 1398,
+        "BalancedSoftmax": 1111
+      },
+      "expert_usage_percentages": {
+        "CE": 98.83064516129032,
+        "LogitAdjust": 56.37096774193549,
+        "BalancedSoftmax": 44.79838709677419
+      },
+      "expert_combinations": {
+        "CE + LogitAdjust": {
+          "count": 1369,
+          "percentage": 55.20161290322581
+        },
+        "CE + BalancedSoftmax": {
+          "count": 1082,
+          "percentage": 43.62903225806451
+        },
+        "LogitAdjust + BalancedSoftmax": {
+          "count": 29,
+          "percentage": 1.1693548387096775
+        }
+      }
+    }
+  }
+}
